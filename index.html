@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BlueSave | Cloud Архив</title>
     <style>
-        /* --- КОМФОРТНЫЙ ТЕМНЫЙ ДИЗАЙН --- */
         :root {
             --bg-body: #17191d;
             --bg-card: #1f2329;
@@ -19,7 +18,7 @@
         body {
             background-color: var(--bg-body);
             color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
             padding: 0;
         }
@@ -47,7 +46,6 @@
             padding: 0 20px;
         }
 
-        /* Сетка карточек */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -61,12 +59,11 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: border-color 0.2s;
         }
 
         .card:hover {
             border-color: var(--accent);
-            transform: translateY(-3px);
         }
 
         .card-img {
@@ -91,7 +88,6 @@
             line-height: 1.3;
         }
 
-        /* Инфо об авторе */
         .author-box {
             display: flex;
             align-items: center;
@@ -141,55 +137,50 @@
 
 <header>
     <h1>BlueSave</h1>
-    <div style="font-size: 0.7rem; color: var(--accent); font-family: var(--font-mono);">DATABASE_ONLINE</div>
+    <div style="font-size: 0.7rem; color: var(--accent); font-family: var(--font-mono);">DATABASE_CONNECTED</div>
 </header>
 
 <div class="container">
     <div class="grid" id="gallery">
-        <div id="status">Загрузка данных из таблицы...</div>
+        <div id="status">Подключение к базе данных...</div>
     </div>
 </div>
 
 <script>
-    // 1. ВСТАВЬ СВОЮ ССЫЛКУ СЮДА
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyVktG3-mSFwav63VY8FxuOXGthCx7eQtGrCrAtTflRn4mz57fECmfOtp6F09ry3mxWUbXhHAO6XFc/pub?output=csv';
-	// 2. НАСТРОЙКА РОЛЕЙ (один раз)
+
     const roles = {
         "Polyakov": { label: "Админ", color: "#4a9eff" },
-        "Blue": { label: "Создатель", color: "#00ffcc" },
+        "Egor_Dev": { label: "Создатель", color: "#00ffcc" },
         "Yaroslav_88": { label: "Разработчик", color: "#ff4a4a" }
     };
-
-    async function loadData() {
+	async function loadData() {
         try {
             const response = await fetch(SHEET_URL);
             const text = await response.text();
             
-            // Чистим данные от пустых строк
+            // Разбиваем на строки и убираем заголовок + пустые строки
             const rows = text.trim().split(/\r?\n/).slice(1);
             const container = document.getElementById('gallery');
             
             if (rows.length === 0) {
-                container.innerHTML = '<div id="status">Таблица пуста.</div>';
+                container.innerHTML = '<div id="status">База данных пуста.</div>';
                 return;
             }
 
-            container.innerHTML = ''; // Очистка
+            container.innerHTML = '';
 
             rows.forEach(row => {
-                // Разделяем по ; или , (для разных версий Excel/Google)
                 const cols = row.split(/[;,]/);
-                if (cols.length < 4) return;
+                // Проверяем, что в строке есть хотя бы 4 заполненных колонки
+                if (cols.length < 4 || !cols[0].trim()) return;
 
-                // Убираем кавычки и лишние пробелы
                 const [title, author, img, link] = cols.map(c => c.trim().replace(/^"|"$/g, ''));
-                
-                // Получаем данные профиля
                 const user = roles[author] || { label: "User", color: "#707a8c" };
 
                 container.innerHTML += 
                     <div class="card">
-                        <img src="${img}" class="card-img" onerror="this.src='https://via.placeholder.com/400x250/121417/2d333b?text=IMAGE_ERROR'">
+                        <img src="${img}" class="card-img" onerror="this.src='https://via.placeholder.com/400x250/121417/2d333b?text=НЕТ_ФОТО'">
                         <div class="card-body">
                             <div class="author-box">
                                 <div class="avatar-mini" style="background:${user.color}"></div>
@@ -198,7 +189,7 @@
                                 </div>
                             </div>
                             <h3 class="card-title">${title}</h3>
-                            <a href="${link}" class="btn-download" target="_blank">СКАЧАТЬ ФАЙЛ</a>
+                            <a href="${link}" class="btn-download" target="_blank">СКАЧАТЬ</a>
                         </div>
                     </div>
                 ;
@@ -206,7 +197,7 @@
 
         } catch (error) {
             console.error(error);
-            document.getElementById('status').innerText = 'ОШИБКА ДОСТУПА. ПРОВЕРЬТЕ КОНСОЛЬ (F12).';
+            document.getElementById('status').innerText = 'ОШИБКА ДОСТУПА. ПРОВЕРЬТЕ КОНСОЛЬ.';
         }
     }
 
