@@ -74,7 +74,7 @@ const blob = await response.blob();
 const blobUrl = window.URL.createObjectURL(blob);
 const a = document.createElement('a');
 a.href = blobUrl;
-a.download = filename + ".jpg"; 
+a.download = filename.toLowerCase().endsWith('.jpg') ? filename : filename + ".jpg";
 document.body.appendChild(a);
 a.click();
 document.body.removeChild(a);
