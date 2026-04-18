@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BlueSave | Storage</title>
     <style>
-        /* --- НАСТРОЙКИ СТИЛЯ --- */
         :root {
             --bg: #121417;
             --card: #1c1f24;
@@ -17,142 +16,25 @@
         }
 
         * { box-sizing: border-box; }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: var(--font-mono);
-            margin: 0;
-            line-height: 1.5;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        header {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #0f1114;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
+        body { background-color: var(--bg); color: var(--text); font-family: var(--font-mono); margin: 0; line-height: 1.5; }
+        header { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #0f1114; position: sticky; top: 0; z-index: 100; }
         .logo-block { display: flex; flex-direction: column; min-width: 0; }
-        .logo { font-size: 1.1rem; font-weight: bold; color: #fff; letter-spacing: 1px; white-space: nowrap; }
-        .logo-link { text-decoration: none; color: var(--text); opacity: 0.7; font-size: 0.65rem; margin-top: 2px; letter-spacing: 0.5px; }
-
-        .btn-upload {
-            border: 1px dashed var(--accent);
-            color: var(--accent);
-            padding: 6px 12px;
-            text-decoration: none;
-            font-size: 0.75rem;
-            transition: 0.2s;
-            cursor: pointer;
-            background: transparent;
-        }
-
-        .btn-upload:hover { background: var(--accent); color: #000; }
-
+        .logo { font-size: 1.1rem; font-weight: bold; color: #fff; letter-spacing: 1px; }
+        .logo-link { text-decoration: none; color: var(--text); opacity: 0.7; font-size: 0.65rem; margin-top: 2px; }
+        .btn-upload { border: 1px dashed var(--accent); color: var(--accent); padding: 6px 12px; text-decoration: none; font-size: 0.75rem; background: transparent; }
         .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
-
-        .search-box {
-            width: 100%;
-            padding: 14px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            color: var(--text);
-            font-family: var(--font-mono);
-            font-size: 1rem;
-            outline: none;
-            margin-bottom: 20px;
-            transition: 0.2s;
-        }
-
-        .search-box:focus { border-color: var(--accent); }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
-        }
-
-        .card {
-            background: var(--card);
-            padding: 12px;
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            transition: 0.2s;
-            position: relative;
-        }
-
-        .card:hover { border-color: var(--accent); }
-
-        .top-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--top-color);
-            color: #000;
-            font-size: 0.6rem;
-            font-weight: 900;
-            padding: 2px 6px;
-            border-radius: 2px;
-            z-index: 10;
-        }
-
-        .card-img {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            object-fit: cover;
-            background: #000;
-            border: 1px solid var(--border);
-            margin-bottom: 12px;
-        }
-
+        .search-box { width: 100%; padding: 14px; background: var(--card); border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono); margin-bottom: 20px; outline: none; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .card { background: var(--card); padding: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; position: relative; }
+        .top-badge { position: absolute; top: 10px; right: 10px; background: var(--top-color); color: #000; font-size: 0.6rem; font-weight: 900; padding: 2px 6px; border-radius: 2px; }
+        .card-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border: 1px solid var(--border); margin-bottom: 12px; }
         .profile-info { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
         .avatar-box { width: 20px; height: 20px; border-radius: 3px; }
         .badge { font-size: 0.6rem; padding: 1px 4px; border-radius: 2px; text-transform: uppercase; font-weight: bold; }
-
-        .card-title {
-            color: #fff;
-            font-size: 0.9rem;
-            margin: 5px 0 10px 0;
-            min-height: 2.7em;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .stats {
-            font-size: 0.65rem;
-            color: #5c6370;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .btn-download {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text);
-            text-align: center;
-            padding: 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            font-family: var(--font-mono);
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-        }
-
+        .card-title { color: #fff; font-size: 0.9rem; margin: 5px 0 10px 0; min-height: 2.7em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .stats { font-size: 0.65rem; color: #5c6370; margin-bottom: 10px; }
+        .btn-download { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 12px; font-size: 0.8rem; font-weight: bold; font-family: var(--font-mono); cursor: pointer; width: 100%; transition: 0.2s; }
         .btn-download:hover { border-color: var(--accent); color: var(--accent); }
-
-        #status { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--accent); }
     </style>
 </head>
 <body>
@@ -166,14 +48,13 @@
 </header>
 
 <div class="container">
-    <input type="text" id="searchInput" class="search-box" placeholder="ПОИСК ПО БАЗЕ ПЕРЕКРАСОК...">
-    <div class="grid" id="gallery">
-        <div id="status">INITIALIZING...</div>
-    </div>
+    <input type="text" id="searchInput" class="search-box" placeholder="ПОИСК ПЕРЕКРАСОК...">
+    <div class="grid" id="gallery"></div>
 </div>
 
 <script>
-    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyVktG3-mSFwav63VY8FxuOXGthCx7eQtGrCrAtTflRn4mz57fECmfOtp6F09ry3mxWUbXhHAO6XFc/pub?output=csv';
+    // ЗАМЕНИ НА СВОЙ URL ПОСЛЕ НАСТРОЙКИ СКРИПТА (см. ниже)
+    const API_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyVktG3-mSFwav63VY8FxuOXGthCx7eQtGrCrAtTflRn4mz57fECmfOtp6F09ry3mxWUbXhHAO6XFc/pub?output=csv';
 
     const profileSystem = {
         "Xaritob23": { role: "Проверенный пользователь", color: "#4a9eff" },
@@ -181,92 +62,77 @@
         "BlueSave": { role: "Разработчик", color: "#ff4a4a" }
     };
 
-    // ВОЗВРАЩЕННАЯ ФУНКЦИЯ ДЛЯ ПРИНУДИТЕЛЬНОГО СКАЧИВАНИЯ
-    async function downloadFile(url, filename) {
+    async function downloadFile(url, filename, rowId) {
+        // Здесь можно добавить вызов скрипта для записи скачивания, если настроишь GAS
+        window.open(url, '_blank');
+        
         try {
             const response = await fetch(url);
             const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.href = blobUrl;
+            link.href = window.URL.createObjectURL(blob);
             link.download = filename;
-            document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(blobUrl);
-        } catch (e) {
-            // Если сервер блокирует CORS, откроет в новой вкладке как запасной вариант
-            window.open(url, '_blank');
-        }
+        } catch (e) { console.log("CORS block"); }
     }
 
     async function fetchData() {
         const gallery = document.getElementById('gallery');
         try {
-            const response = await fetch(SHEET_URL);
+            const response = await fetch(API_URL);
             const rawText = await response.text();
             let rows = rawText.trim().split(/\r?\n/).slice(1);
             
-            let data = rows.map(row => {
+            let data = rows.map((row, index) => {
                 const cols = row.match(/(".*?"|[^",;]+)(?=\s*[,;]|\s*$)/g);
                 return {
+                    id: index + 2, // ID строки в таблице
                     title: cols[0].replace(/"/g, '').trim(),
                     author: cols[1].replace(/"/g, '').trim(),
                     img: cols[2].replace(/"/g, '').trim(),
                     link: cols[3].replace(/"/g, '').trim(),
-                    downloads: parseInt(cols[4]) || 0 
+                    downloads: parseInt(cols[4]) || 0
                 };
             });
 
-            data.sort((a, b) => b.downloads - a.downloads);
+            // СОРТИРОВКА: Разработчик BlueSave всегда сверху, остальные по скачиваниям
+            data.sort((a, b) => {
+                if (a.author === 'BlueSave') return -1;
+                if (b.author === 'BlueSave') return 1;
+                return b.downloads - a.downloads;
+            });
 
-            if (data.length > 4) {
-                const bottomHalfIndex = Math.floor(data.length / 2) + Math.floor(Math.random() * (data.length / 2));
-                const luckyAsset = data.splice(bottomHalfIndex, 1)[0];
-                data.unshift(luckyAsset);
+            // РЕКОМЕНДАЦИЯ (Wildcard): берем рандомную работу не из топа и ставим на 2 место
+            if (data.length > 5) {
+                const randIndex = Math.floor(Math.random() * (data.length - 3)) + 3;
+                const lucky = data.splice(randIndex, 1)[0];
+                data.splice(1, 0, lucky); // Ставим сразу после BlueSave
             }
 
             const maxDownloads = Math.max(...data.map(d => d.downloads));
             gallery.innerHTML = '';
 
-            data.forEach((item, index) => {
+            data.forEach(item => {
                 const userProfile = profileSystem[item.author] || { role: "Пользователь", color: "#707a8c" };
                 const isTop = item.downloads === maxDownloads && item.downloads > 0;
 
                 gallery.innerHTML += `
                     <div class="card">
                         ${isTop ? '<div class="top-badge">ТОП СКАЧИВАНИЙ</div>' : ''}
-                        <img src="${item.img}" class="card-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x180/000/333?text=NO_IMAGE'">
-                        
+                        <img src="${item.img}" class="card-img" loading="lazy">
                         <div class="profile-info">
                             <div class="avatar-box" style="background: ${userProfile.color}"></div>
                             <div style="font-size: 0.75rem; color: ${userProfile.color}">@${item.author}</div>
-                            <div class="badge" style="border: 1px solid ${userProfile.color}; color: ${userProfile.color}">
-                                ${userProfile.role}
-                            </div>
+                            <div class="badge" style="border: 1px solid ${userProfile.color}; color: ${userProfile.color}">${userProfile.role}</div>
                         </div>
-
                         <h3 class="card-title">${item.title}</h3>
-                        <div class="stats">
-                            <span>📥 СКАЧАНО: ${item.downloads}</span>
-                        </div>
-                        
-                        <button class="btn-download" onclick="downloadFile('${item.link}', '${item.title}')">СКАЧАТЬ</button>
+                        <div class="stats">📥 СКАЧАНО: ${item.downloads}</div>
+                        <button class="btn-download" onclick="downloadFile('${item.link}', '${item.title}', ${item.id})">СКАЧАТЬ</button>
                     </div>
                 `;
             });
-        } catch (error) {
-            gallery.innerHTML = '<div id="status" style="color:#ff4a4a">DATABASE_OFFLINE</div>';
-        }
+        } catch (e) { gallery.innerHTML = 'DATABASE_ERROR'; }
     }
-
-    document.getElementById('searchInput').addEventListener('input', function() {
-        const query = this.value.toLowerCase();
-        document.querySelectorAll('.card').forEach(card => {
-            const text = card.innerText.toLowerCase();
-            card.style.display = text.includes(query) ? 'flex' : 'none';
-        });
-    });
 
     fetchData();
 </script>
