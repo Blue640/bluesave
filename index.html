@@ -18,7 +18,9 @@
 * { box-sizing: border-box; }
 body { background-color: var(--bg); color: var(--text); font-family: var(--font-mono); margin: 0; line-height: 1.5; }
 header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #0a0c0f; position: sticky; top: 0; z-index: 100; }
-.logo { font-size: 1.4rem; font-weight: bold; color: #fff; text-transform: uppercase; }
+.logo-block { display: flex; flex-direction: column; }
+.logo { font-size: 1.4rem; font-weight: bold; color: #fff; letter-spacing: 1px; text-transform: uppercase; }
+.logo-link { text-decoration: none; color: var(--text); opacity: 0.6; font-size: 0.7rem; margin-top: 2px; }
 .btn-upload { border: 1px dashed var(--accent); color: var(--accent); padding: 8px 16px; text-decoration: none; font-size: 0.8rem; background: transparent; }
 .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
 .search-box { width: 100%; padding: 15px; background: var(--card); border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono); margin-bottom: 25px; outline: none; border-radius: 4px; }
@@ -38,7 +40,10 @@ header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: fl
 </head>
 <body>
 <header>
+<div class="logo-block">
 <div class="logo">BLUE<span style="color:var(--accent)">SAVE</span></div>
+<a href="https://t.me/bluesave_mts" target="_blank" class="logo-link">BY @BlueSave_MTS</a>
+</div>
 <a href="https://forms.gle/tcu6xcjLdpWq5miBA" target="_blank" class="btn-upload">ЗАГРУЗИТЬ</a>
 </header>
 <div class="container">
@@ -46,8 +51,8 @@ header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: fl
 <div class="grid" id="gallery"></div>
 </div>
 <script>
-const SCRIPT_URL = 'ССЫЛКА_ИЗ_APPS_SCRIPT'; 
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyVktG3-mSFwav63VY8FxuOXGthCx7eQtGrCrAtTflRn4mz57fECmfOtp6F09ry3mxWUbXhHAO6XFc/pub?output=csv';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxTpSfEV2XdflI2bGSTgT3mFrgBbiVjrPqhSEQQ1ZxULinREv1ZTRgWLNfVfVlm_bPm/exec';
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyVktG3-mSFwav63VY8FxuOXGthCx7eQtGrCrAtTflRn4mz57fECmfOtp6X09ry3mxWUbXhHAO6XFc/pub?output=csv';
 
 const profiles = {
 "Xaritob23": { role: "Проверенный", color: "#4a9eff" },
@@ -83,21 +88,19 @@ downloads: parseInt(c[4]) || 0
 };
 });
 
-// Сортировка по убыванию скачиваний
 data.sort((a, b) => b.downloads - a.downloads);
 
-// Вытаскиваем разработчика (BlueSave)
+// Вытаскиваем BlueSave
 const devIdx = data.findIndex(x => x.author === 'BlueSave');
 let devItem = devIdx !== -1 ? data.splice(devIdx, 1)[0] : null;
 
-// Вытаскиваем самую непопулярную работу (последнюю в списке)
+// Вытаскиваем самую непопулярную для перемещения наверх
 let luckyItem = data.length > 0 ? data.pop() : null;
 
-// Собираем финальный массив:
 let final = [];
-if (devItem) final.push(devItem); // №1 - BlueSave
-if (luckyItem) final.push(luckyItem); // №2 - Тот, кому нужно помочь (перемещен снизу)
-final = final.concat(data); // Все остальные
+if (devItem) final.push(devItem);
+if (luckyItem) final.push(luckyItem);
+final = final.concat(data);
 
 const maxD = Math.max(...final.map(d => d.downloads));
 gallery.innerHTML = '';
