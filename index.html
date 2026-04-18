@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BlueSave | Storage</title>
+<title>BlueSave</title>
+<link rel="icon" href="bluesav.jpg" type="image/png">
 <style>
 :root {
 --bg: #0f1114;
@@ -116,7 +117,7 @@ devWork = data.splice(devIndex, 1)[0];
 // 3. Выбор рекомендации (самая непопулярная)
 let luckyWork = null;
 // ЗАЩИТА ОТ ДУБЛИКАТОВ: Дублируем только если товаров в базе > 4
-const min_assets_for_duplicates = 4;
+const min_assets_for_duplicates = 15;
 
 if (data.length > 0) {
 // Всегда берем последнего как рекомендацию (он №2 в списке)
