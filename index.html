@@ -68,14 +68,20 @@ beacon.src = SCRIPT_URL + "?row=" + rowId + "&t=" + Date.now();
 localStorage.setItem('voted_' + rowId, 'true');
 }
 
-// Создаем невидимую ссылку, чтобы принудительно запустить скачивание
+try {
+const response = await fetch(url);
+const blob = await response.blob();
+const blobUrl = window.URL.createObjectURL(blob);
 const a = document.createElement('a');
-a.href = url;
-a.download = filename; // Говорим браузеру: "Это нужно скачать!"
-a.target = '_blank';
+a.href = blobUrl;
+a.download = filename + ".jpg"; 
 document.body.appendChild(a);
 a.click();
 document.body.removeChild(a);
+window.URL.revokeObjectURL(blobUrl);
+} catch (e) {
+window.open(url, '_blank');
+}
 }
 
 async function fetchData() {
