@@ -67,7 +67,15 @@ const beacon = new Image();
 beacon.src = SCRIPT_URL + "?row=" + rowId + "&t=" + Date.now();
 localStorage.setItem('voted_' + rowId, 'true');
 }
-window.open(url, '_blank');
+
+// Создаем невидимую ссылку, чтобы принудительно запустить скачивание
+const a = document.createElement('a');
+a.href = url;
+a.download = filename; // Говорим браузеру: "Это нужно скачать!"
+a.target = '_blank';
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
 }
 
 async function fetchData() {
