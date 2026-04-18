@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlueSave</title>
+    <title>BlueSave | Storage</title>
     <style>
         /* --- НАСТРОЙКИ СТИЛЯ --- */
         :root {
@@ -15,46 +15,70 @@
             --font-mono: 'Consolas', 'Monaco', monospace;
         }
 
+        * {
+            box-sizing: border-box; /* Чтобы паддинги не раздували блоки */
+        }
+
         body {
             background-color: var(--bg);
             color: var(--text);
             font-family: var(--font-mono);
             margin: 0;
             line-height: 1.5;
+            -webkit-tap-highlight-color: transparent; /* Убираем синий блик при нажатии на мобилках */
         }
 
-        /* Шапка с предложкой */
+        /* Шапка */
         header {
-            padding: 20px 40px;
+            padding: 15px 20px;
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #0f1114;
+            position: sticky; /* Чтобы шапка всегда была сверху */
+            top: 0;
+            z-index: 100;
         }
 
         .logo-block {
             display: flex;
             flex-direction: column;
+            min-width: 0; /* Чтобы текст не ломал флекс */
         }
 
         .logo {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: bold;
             color: #fff;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .logo-link {
+            text-decoration: none; 
+            color: var(--text); 
+            opacity: 0.7; 
+            font-size: 0.65rem; 
+            margin-top: 2px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* Кнопка предложки */
         .btn-upload {
             border: 1px dashed var(--accent);
             color: var(--accent);
-            padding: 8px 15px;
+            padding: 6px 12px;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             transition: 0.2s;
             cursor: pointer;
             background: transparent;
+            flex-shrink: 0;
+            margin-left: 10px;
         }
 
         .btn-upload:hover {
@@ -64,14 +88,14 @@
 
         .container {
             max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+            margin: 20px auto;
+            padding: 0 15px;
         }
 
         /* Поле поиска */
         .search-box {
             width: 100%;
-            padding: 12px 15px;
+            padding: 14px;
             background: var(--card);
             border: 1px solid var(--border);
             color: var(--text);
@@ -79,24 +103,27 @@
             font-size: 1rem;
             outline: none;
             margin-bottom: 20px;
-            box-sizing: border-box;
             transition: 0.2s;
+            border-radius: 0; /* Оставляем острые углы для стиля */
         }
 
         .search-box:focus {
             border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(74, 158, 255, 0.1);
         }
 
+        /* Сетка карточек */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            /* Адаптивная сетка: минимум 280px, если не влезает — в 1 колонку */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
         }
 
         /* Карточки */
         .card {
             background: var(--card);
-            padding: 15px;
+            padding: 12px;
             border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
@@ -107,7 +134,7 @@
 
         .card-img {
             width: 100%;
-            height: 180px;
+            aspect-ratio: 16 / 9; /* Сохраняем пропорции картинки */
             object-fit: cover;
             background: #000;
             border: 1px solid var(--border);
@@ -117,28 +144,33 @@
         .profile-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 10px;
         }
 
         .avatar-box {
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
         }
 
         .badge {
-            font-size: 0.65rem;
-            padding: 2px 5px;
-            border-radius: 3px;
+            font-size: 0.6rem;
+            padding: 1px 4px;
+            border-radius: 2px;
             text-transform: uppercase;
             font-weight: bold;
         }
 
         .card-title {
             color: #fff;
-            font-size: 0.95rem;
-            margin: 10px 0;
+            font-size: 0.9rem;
+            margin: 5px 0 15px 0;
+            min-height: 2.7em; /* Чтобы заголовки в 2 строки не двигали кнопки */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         /* Кнопка скачивания */
@@ -148,12 +180,13 @@
             border: 1px solid var(--border);
             color: var(--text);
             text-align: center;
-            padding: 10px;
+            padding: 12px;
             font-size: 0.8rem;
             font-weight: bold;
             font-family: var(--font-mono);
             cursor: pointer;
             transition: 0.2s;
+            width: 100%;
         }
 
         .btn-download:hover {
@@ -164,27 +197,30 @@
         #status {
             grid-column: 1/-1;
             text-align: center;
-            padding: 100px;
+            padding: 60px 20px;
             color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        /* Адаптация под мобильные устройства */
+        @media (max-width: 480px) {
+            header { padding: 15px; }
+            .logo { font-size: 1rem; }
+            .btn-upload { padding: 6px 10px; font-size: 0.7rem; }
+            .container { margin: 15px auto; }
+            .grid { gap: 10px; }
         }
     </style>
 </head>
 <body>
 
 <header>
-<div class="logo-block">
-    <div class="logo">BLUE<span style="color:var(--accent)">SAVE</span></div>
-    <a href="https://t.me/bluesave_mts" target="_blank" style="
-        text-decoration: none; 
-        color: var(--text); 
-        opacity: 0.7; 
-        font-size: 0.77rem; 
-        margin-top: 2px;
-        letter-spacing: 1px;
-    ">
-        BY @BlueSave_MTS
-    </a>
-</div>
+    <div class="logo-block">
+        <div class="logo">BLUE<span style="color:var(--accent)">SAVE</span></div>
+        <a href="https://t.me/bluesave_mts" target="_blank" class="logo-link">
+            BY @BlueSave_MTS
+        </a>
+    </div>
     
     <a href="https://forms.gle/tcu6xcjLdpWq5miBA" target="_blank" class="btn-upload">[+] Загрузить</a>
 </header>
@@ -193,7 +229,7 @@
     <input type="text" id="searchInput" class="search-box" placeholder="ПОИСК ПЕРЕКРАСОК И АВТОРОВ">
 
     <div class="grid" id="gallery">
-        <div id="status">ЗАГРУЗКА...</div>
+        <div id="status">INITIALIZING_STORAGE...</div>
     </div>
 </div>
 
@@ -206,7 +242,6 @@
         "BlueSave": { role: "Разработчик", color: "#ff4a4a" }
     };
 
-    // Функция скачивания файлов
     async function downloadFile(url, filename) {
         try {
             const response = await fetch(url);
@@ -251,11 +286,11 @@
 
                     gallery.innerHTML += `
                         <div class="card">
-                            <img src="${img}" class="card-img" onerror="this.src='https://via.placeholder.com/300x180/000/333?text=NO_IMAGE'">
+                            <img src="${img}" class="card-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x180/000/333?text=NO_IMAGE'">
                             
                             <div class="profile-info">
                                 <div class="avatar-box" style="background: ${userProfile.color}"></div>
-                                <div style="font-size: 0.8rem; color: ${userProfile.color}">@${author}</div>
+                                <div style="font-size: 0.75rem; color: ${userProfile.color}">@${author}</div>
                                 <div class="badge" style="border: 1px solid ${userProfile.color}; color: ${userProfile.color}">
                                     ${userProfile.role}
                                 </div>
@@ -269,11 +304,10 @@
                 }
             });
         } catch (error) {
-            gallery.innerHTML = '<div id="status" style="color:red">ERROR_CONNECTION_REFUSED</div>';
+            gallery.innerHTML = '<div id="status" style="color:#ff4a4a">ERROR_CONNECTION_REFUSED</div>';
         }
     }
 
-    // Скрипт живого поиска
     document.getElementById('searchInput').addEventListener('input', function() {
         const query = this.value.toLowerCase();
         const cards = document.querySelectorAll('.card');
@@ -282,11 +316,7 @@
             const title = card.querySelector('.card-title').innerText.toLowerCase();
             const author = card.querySelector('.profile-info').innerText.toLowerCase();
             
-            if (title.includes(query) || author.includes(query)) {
-                card.style.display = 'flex';
-            } else {
-                card.style.display = 'none';
-            }
+            card.style.display = (title.includes(query) || author.includes(query)) ? 'flex' : 'none';
         });
     });
 
