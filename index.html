@@ -68,6 +68,25 @@
             padding: 0 20px;
         }
 
+        /* Поле поиска */
+        .search-box {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            outline: none;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            transition: 0.2s;
+        }
+
+        .search-box:focus {
+            border-color: var(--accent);
+        }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -161,6 +180,8 @@
 </header>
 
 <div class="container">
+    <input type="text" id="searchInput" class="search-box" placeholder="[ ПОИСК ПЕРЕКРАСОК И АВТОРОВ... ]">
+
     <div class="grid" id="gallery">
         <div id="status">ЗАГРУЗКА...</div>
     </div>
@@ -178,7 +199,6 @@
     // Функция скачивания файлов
     async function downloadFile(url, filename) {
         try {
-            // Пытаемся скачать в фоне
             const response = await fetch(url);
             const blob = await response.blob();
             const blobUrl = window.URL.createObjectURL(blob);
@@ -190,7 +210,6 @@
             document.body.removeChild(link);
             window.URL.revokeObjectURL(blobUrl);
         } catch (e) {
-            // Если ссылка из Telegram или защищена, открываем её в новой вкладке
             window.open(url, '_blank');
         }
     }
@@ -243,6 +262,23 @@
             gallery.innerHTML = '<div id="status" style="color:red">ERROR_CONNECTION_REFUSED</div>';
         }
     }
+
+    // Скрипт живого поиска
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+        const cards = document.querySelectorAll('.card');
+        
+        cards.forEach(card => {
+            const title = card.querySelector('.card-title').innerText.toLowerCase();
+            const author = card.querySelector('.profile-info').innerText.toLowerCase();
+            
+            if (title.includes(query) || author.includes(query)) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
 
     fetchData();
 </script>
