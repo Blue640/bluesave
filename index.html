@@ -60,6 +60,7 @@ const profiles = {
 "BlueSave": { role: "Разработчик", color: "#ff4a4a" }
 };
 
+// Функция скачивания (исправлена)
 async function downloadFile(url, filename, rowId) {
     const isLogged = localStorage.getItem('voted_' + rowId);
     if (!isLogged) {
@@ -72,14 +73,14 @@ async function downloadFile(url, filename, rowId) {
         const response = await fetch(url);
         const blob = await response.blob();
         
-        // Создаем правильный тип файла, чтобы телефон не лепил .png в конец
+        // Создаем Blob с явным типом, чтобы не было .png в конце
         const imageBlob = new Blob([blob], { type: 'image/jpeg' });
         const blobUrl = window.URL.createObjectURL(imageBlob);
         
         const a = document.createElement('a');
         a.href = blobUrl;
         
-        // Очищаем имя от лишних .jpg, если они там уже есть, и ставим один чистый .jpg
+        // Очищаем имя от точек и ставим чистый .jpg
         let cleanName = filename.split('.')[0]; 
         a.download = cleanName + ".jpg"; 
         
@@ -88,25 +89,8 @@ async function downloadFile(url, filename, rowId) {
         document.body.removeChild(a);
         window.URL.revokeObjectURL(blobUrl);
     } catch (e) {
-        // Если совсем всё упало — открываем как раньше
         window.open(url, '_blank');
     }
-}
-
-try {
-const response = await fetch(url);
-const blob = await response.blob();
-const blobUrl = window.URL.createObjectURL(blob);
-const a = document.createElement('a');
-a.href = blobUrl;
-a.download = filename.toLowerCase().endsWith('.jpg') ? filename : filename + ".jpg";
-document.body.appendChild(a);
-a.click();
-document.body.removeChild(a);
-window.URL.revokeObjectURL(blobUrl);
-} catch (e) {
-window.open(url, '_blank');
-}
 }
 
 async function fetchData() {
@@ -129,11 +113,9 @@ downloads: parseInt(c[4]) || 0
 
 data.sort((a, b) => b.downloads - a.downloads);
 
-// Вытаскиваем BlueSave
 const devIdx = data.findIndex(x => x.author === 'BlueSave');
 let devItem = devIdx !== -1 ? data.splice(devIdx, 1)[0] : null;
 
-// Вытаскиваем самую непопулярную для перемещения наверх
 let luckyItem = data.length > 0 ? data.pop() : null;
 
 let final = [];
