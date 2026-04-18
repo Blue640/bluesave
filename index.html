@@ -13,7 +13,7 @@
             --border: #2d333b;
             --text: #b0b7c1;
             --font-mono: 'Consolas', 'Monaco', monospace;
-            --top-color: #ffcc00; /* Цвет для ТОП */
+            --top-color: #ffcc00;
         }
 
         * { box-sizing: border-box; }
@@ -91,7 +91,6 @@
 
         .card:hover { border-color: var(--accent); }
 
-        /* Метка ТОП */
         .top-badge {
             position: absolute;
             top: 10px;
@@ -182,6 +181,25 @@
         "BlueSave": { role: "Разработчик", color: "#ff4a4a" }
     };
 
+    // ВОЗВРАЩЕННАЯ ФУНКЦИЯ ДЛЯ ПРИНУДИТЕЛЬНОГО СКАЧИВАНИЯ
+    async function downloadFile(url, filename) {
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+        } catch (e) {
+            // Если сервер блокирует CORS, откроет в новой вкладке как запасной вариант
+            window.open(url, '_blank');
+        }
+    }
+
     async function fetchData() {
         const gallery = document.getElementById('gallery');
         try {
@@ -196,14 +214,12 @@
                     author: cols[1].replace(/"/g, '').trim(),
                     img: cols[2].replace(/"/g, '').trim(),
                     link: cols[3].replace(/"/g, '').trim(),
-                    downloads: parseInt(cols[4]) || 0 // Читаем 5-й столбец как число
+                    downloads: parseInt(cols[4]) || 0 
                 };
             });
 
-            // 1. Сортируем по скачиваниям
             data.sort((a, b) => b.downloads - a.downloads);
 
-            // 2. Рекомендация (Wildcard): берем одного из нижней половины и кидаем вверх
             if (data.length > 4) {
                 const bottomHalfIndex = Math.floor(data.length / 2) + Math.floor(Math.random() * (data.length / 2));
                 const luckyAsset = data.splice(bottomHalfIndex, 1)[0];
@@ -235,7 +251,7 @@
                             <span>📥 СКАЧАНО: ${item.downloads}</span>
                         </div>
                         
-                        <button class="btn-download" onclick="window.open('${item.link}', '_blank')">СКАЧАТЬ</button>
+                        <button class="btn-download" onclick="downloadFile('${item.link}', '${item.title}')">СКАЧАТЬ</button>
                     </div>
                 `;
             });
