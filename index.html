@@ -61,11 +61,36 @@ const profiles = {
 };
 
 async function downloadFile(url, filename, rowId) {
-const isLogged = localStorage.getItem('voted_' + rowId);
-if (!isLogged) {
-const beacon = new Image();
-beacon.src = SCRIPT_URL + "?row=" + rowId + "&t=" + Date.now();
-localStorage.setItem('voted_' + rowId, 'true');
+    const isLogged = localStorage.getItem('voted_' + rowId);
+    if (!isLogged) {
+        const beacon = new Image();
+        beacon.src = SCRIPT_URL + "?row=" + rowId + "&t=" + Date.now();
+        localStorage.setItem('voted_' + rowId, 'true');
+    }
+
+    try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        
+        // Создаем правильный тип файла, чтобы телефон не лепил .png в конец
+        const imageBlob = new Blob([blob], { type: 'image/jpeg' });
+        const blobUrl = window.URL.createObjectURL(imageBlob);
+        
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        
+        // Очищаем имя от лишних .jpg, если они там уже есть, и ставим один чистый .jpg
+        let cleanName = filename.split('.')[0]; 
+        a.download = cleanName + ".jpg"; 
+        
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(blobUrl);
+    } catch (e) {
+        // Если совсем всё упало — открываем как раньше
+        window.open(url, '_blank');
+    }
 }
 
 try {
