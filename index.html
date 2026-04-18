@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BlueSave</title>
-<link rel="icon" href="bluesav.jpg" type="image/png">
+<title>BlueSave | Storage</title>
 <style>
 :root {
 --bg: #0f1114;
@@ -18,44 +17,36 @@
 * { box-sizing: border-box; }
 body { background-color: var(--bg); color: var(--text); font-family: var(--font-mono); margin: 0; line-height: 1.5; }
 header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #0a0c0f; position: sticky; top: 0; z-index: 100; }
-.logo-block { display: flex; flex-direction: column; }
-.logo { font-size: 1.4rem; font-weight: bold; color: #fff; letter-spacing: 1px; text-transform: uppercase; }
-.logo-link { text-decoration: none; color: var(--text); opacity: 0.6; font-size: 0.7rem; margin-top: 2px; }
-.btn-upload { border: 1px dashed var(--accent); color: var(--accent); padding: 8px 16px; text-decoration: none; font-size: 0.8rem; background: transparent; transition: 0.2s; }
-.btn-upload:hover { background: var(--accent); color: #000; }
+.logo { font-size: 1.4rem; font-weight: bold; color: #fff; text-transform: uppercase; }
+.btn-upload { border: 1px dashed var(--accent); color: var(--accent); padding: 8px 16px; text-decoration: none; font-size: 0.8rem; background: transparent; }
 .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
 .search-box { width: 100%; padding: 15px; background: var(--card); border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono); margin-bottom: 25px; outline: none; border-radius: 4px; }
-.search-box:focus { border-color: var(--accent); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 .card { background: var(--card); padding: 15px; border: 1px solid var(--border); display: flex; flex-direction: column; position: relative; border-radius: 4px; }
-.top-badge { position: absolute; top: 10px; right: 10px; background: var(--top-color); color: #000; font-size: 0.65rem; font-weight: 900; padding: 3px 8px; border-radius: 2px; z-index: 5; }
-.card-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border: 1px solid var(--border); margin-bottom: 15px; border-radius: 2px; }
+.top-badge { position: absolute; top: 10px; right: 10px; background: var(--top-color); color: #000; font-size: 0.65rem; font-weight: 900; padding: 3px 8px; border-radius: 2px; }
+.card-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border: 1px solid var(--border); margin-bottom: 15px; }
 .profile-info { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .avatar-box { width: 22px; height: 22px; border-radius: 4px; }
-.badge { font-size: 0.6rem; padding: 2px 5px; border-radius: 3px; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
+.badge { font-size: 0.6rem; padding: 2px 5px; border-radius: 3px; text-transform: uppercase; font-weight: bold; }
 .card-title { color: #fff; font-size: 1rem; margin: 0 0 12px 0; min-height: 2.8em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .stats { font-size: 0.75rem; color: #5c6370; margin-bottom: 15px; display: flex; align-items: center; gap: 6px; }
 .icon-dl { width: 14px; height: 14px; fill: currentColor; }
-.btn-download { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 12px; font-size: 0.85rem; font-weight: bold; font-family: var(--font-mono); cursor: pointer; width: 100%; border-radius: 4px; transition: 0.2s; }
-.btn-download:hover { border-color: var(--accent); color: var(--accent); background: rgba(74, 158, 255, 0.05); }
+.btn-download { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 12px; font-size: 0.85rem; font-weight: bold; font-family: var(--font-mono); cursor: pointer; width: 100%; border-radius: 4px; }
+.btn-download:hover { border-color: var(--accent); color: var(--accent); }
 </style>
 </head>
 <body>
 <header>
-<div class="logo-block">
 <div class="logo">BLUE<span style="color:var(--accent)">SAVE</span></div>
-<a href="https://t.me/bluesave_mts" target="_blank" class="logo-link">BY @BlueSave_MTS</a>
-</div>
 <a href="https://forms.gle/tcu6xcjLdpWq5miBA" target="_blank" class="btn-upload">ЗАГРУЗИТЬ</a>
 </header>
 <div class="container">
-<input type="text" id="searchInput" class="search-box" placeholder="ПОИСК ПО НАЗВАНИЮ ИЛИ АВТОРУ...">
+<input type="text" id="searchInput" class="search-box" placeholder="ПОИСК...">
 <div class="grid" id="gallery"></div>
 </div>
 <script>
-// --- КОНФИГУРАЦИЯ ---
-const SCRIPT_URL = 'ССЫЛКА_ИЗ_APPS_SCRIPT'; // <--- ВСТАВЬ СЮДА СВОЮ ССЫЛКУ /exec
-const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyVktG3-mSFwav63VY8FxuOXGthCx7eQtGrCrAtTflRn4mz57fECmfOtp6F09ry3mxWUbXhHAO6XFc/pub?output=csv';
+const SCRIPT_URL = 'ССЫЛКА_ИЗ_APPS_SCRIPT'; 
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyVktG3-mSFwav63VY8FxuOXGthCx7eQtGrCrAtTflRn4mz57fECmfOtp6F09ry3mxWUbXhHAO6XFc/pub?output=csv';
 
 const profiles = {
 "Xaritob23": { role: "Проверенный", color: "#4a9eff" },
@@ -63,121 +54,82 @@ const profiles = {
 "BlueSave": { role: "Разработчик", color: "#ff4a4a" }
 };
 
-// Функция скачивания + защита от накрутки
 async function downloadFile(url, filename, rowId) {
 const isLogged = localStorage.getItem('voted_' + rowId);
-if (!isLogged && SCRIPT_URL !== 'ССЫЛКА_ИЗ_APPS_SCRIPT') {
+if (!isLogged) {
 const beacon = new Image();
 beacon.src = SCRIPT_URL + "?row=" + rowId + "&t=" + Date.now();
 localStorage.setItem('voted_' + rowId, 'true');
 }
-try {
-const res = await fetch(url);
-const blob = await res.blob();
-const a = document.createElement('a');
-a.href = URL.createObjectURL(blob);
-a.download = filename;
-document.body.appendChild(a);
-a.click();
-document.body.removeChild(a);
-} catch (e) {
 window.open(url, '_blank');
 }
-}
 
-// Загрузка и рендеринг
 async function fetchData() {
 const gallery = document.getElementById('gallery');
 try {
-const res = await fetch(SHEET_CSV_URL);
+const res = await fetch(CSV_URL);
 const text = await res.text();
 const rows = text.trim().split(/\r?\n/).slice(1);
 let data = rows.map((r, i) => {
 const c = r.match(/(".*?"|[^",;]+)(?=\s*[,;]|\s*$)/g);
 return {
 id: i + 2,
-title: c[0]?.replace(/"/g, '').trim() || "Без названия",
-author: c[1]?.replace(/"/g, '').trim() || "Anon",
-img: c[2]?.replace(/"/g, '').trim() || "",
-link: c[3]?.replace(/"/g, '').trim() || "",
+title: c[0].replace(/"/g, ''),
+author: c[1].replace(/"/g, ''),
+img: c[2].replace(/"/g, ''),
+link: c[3].replace(/"/g, ''),
 downloads: parseInt(c[4]) || 0
 };
 });
 
-// 1. Сортировка по популярности
+// Сортировка по убыванию скачиваний
 data.sort((a, b) => b.downloads - a.downloads);
 
-// 2. Закрепляем BlueSave первым (и удаляем из общего списка)
-const devIndex = data.findIndex(item => item.author === 'BlueSave');
-let devWork = null;
-if (devIndex !== -1) {
-devWork = data.splice(devIndex, 1)[0];
-}
+// Вытаскиваем разработчика (BlueSave)
+const devIdx = data.findIndex(x => x.author === 'BlueSave');
+let devItem = devIdx !== -1 ? data.splice(devIdx, 1)[0] : null;
 
-// 3. Выбор рекомендации (самая непопулярная)
-let luckyWork = null;
-// ЗАЩИТА ОТ ДУБЛИКАТОВ: Дублируем только если товаров в базе > 4
-const min_assets_for_duplicates = 15;
+// Вытаскиваем самую непопулярную работу (последнюю в списке)
+let luckyItem = data.length > 0 ? data.pop() : null;
 
-if (data.length > 0) {
-// Всегда берем последнего как рекомендацию (он №2 в списке)
-luckyWork = data[data.length - 1]; 
-}
+// Собираем финальный массив:
+let final = [];
+if (devItem) final.push(devItem); // №1 - BlueSave
+if (luckyItem) final.push(luckyItem); // №2 - Тот, кому нужно помочь (перемещен снизу)
+final = final.concat(data); // Все остальные
 
-let finalData = [];
-// Всегда закрепленные позиции
-if (devWork) finalData.push(devWork); // №1
-if (luckyWork) finalData.push(luckyWork); // №2
-
-// 4. Заполнение остальными и умное дублирование
-data.forEach((item, index) => {
-// Не добавляем "luckyWork" повторно, он уже №2
-if (luckyWork && item.id === luckyWork.id) return;
-
-finalData.push(item);
-
-// Дубликат №3 на 6-ю позицию только если база большая
-if (luckyWork && finalData.length === 5 && data.length > min_assets_for_duplicates) {
-finalData.push(luckyWork); 
-}
-});
-
-const maxDownloads = Math.max(...finalData.map(d => d.downloads));
+const maxD = Math.max(...final.map(d => d.downloads));
 gallery.innerHTML = '';
 
-finalData.forEach(item => {
-const userProfile = profiles[item.author] || { role: "Пользователь", color: "#707a8c" };
-const isTop = item.downloads === maxDownloads && maxDownloads > 0;
-// Кнопка скачивания только если автор НЕ BlueSave
-const downloadBtnHTML = item.author !== 'BlueSave' ? 
-`<button class="btn-download" onclick="downloadFile('${item.link}', '${item.title}', ${item.id})">СКАЧАТЬ</button>` : '';
+final.forEach(item => {
+const p = profiles[item.author] || { role: "Юзер", color: "#707a8c" };
+const isTop = item.downloads === maxD && maxD > 0;
+const hasBtn = item.author !== 'BlueSave';
 
 gallery.innerHTML += `
 <div class="card">
 ${isTop ? '<div class="top-badge">ТОП</div>' : ''}
-<img src="${item.img}" class="card-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x180/000/333?text=НЕТ_ФОТО'">
+<img src="${item.img}" class="card-img">
 <div class="profile-info">
-<div class="avatar-box" style="background:${userProfile.color}"></div>
-<div style="font-size:0.8rem;color:${userProfile.color}">@${item.author}</div>
-<div class="badge" style="border:1px solid ${userProfile.color};color:${userProfile.color}">${userProfile.role}</div>
+<div class="avatar-box" style="background:${p.color}"></div>
+<div style="font-size:0.8rem;color:${p.color}">@${item.author}</div>
+<div class="badge" style="border:1px solid ${p.color};color:${p.color}">${p.role}</div>
 </div>
 <h3 class="card-title">${item.title}</h3>
 <div class="stats">
 <svg class="icon-dl" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
 <span>СКАЧАНО: ${item.downloads}</span>
 </div>
-${downloadBtnHTML}
+${hasBtn ? `<button class="btn-download" onclick="downloadFile('${item.link}', '${item.title}', ${item.id})">СКАЧАТЬ</button>` : ''}
 </div>`;
 });
-} catch (error) { gallery.innerHTML = '<div id="status" style="color:#ff4a4a">DATABASE_OFFLINE</div>'; }
+} catch (e) { gallery.innerHTML = 'ERROR'; }
 }
 
-// Поиск
 document.getElementById('searchInput').addEventListener('input', function() {
-const query = this.value.toLowerCase();
-document.querySelectorAll('.card').forEach(card => {
-const text = card.innerText.toLowerCase();
-card.style.display = text.includes(query) ? 'flex' : 'none';
+const q = this.value.toLowerCase();
+document.querySelectorAll('.card').forEach(c => {
+c.style.display = c.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
 });
 });
 
