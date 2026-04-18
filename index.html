@@ -237,7 +237,7 @@
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyVktG3-mSFwav63VY8FxuOXGthCx7eQtGrCrAtTflRn4mz57fECmfOtp6F09ry3mxWUbXhHAO6XFc/pub?output=csv';
 
     const profileSystem = {
-        "Polyakov": { role: "Проверенный", color: "#4a9eff" },
+        "Xaritob23": { role: "Проверенный пользователь", color: "#4a9eff" },
         "Blue": { role: "Создатель", color: "#00ffcc" },
         "BlueSave": { role: "Разработчик", color: "#ff4a4a" }
     };
@@ -282,7 +282,7 @@
                     const img = cols[2].replace(/"/g, '').trim();
                     const link = cols[3].replace(/"/g, '').trim();
 
-                    const userProfile = profileSystem[author] || { role: "USER", color: "#707a8c" };
+                    const userProfile = profileSystem[author] || { role: "Пользователь", color: "#707a8c" };
 
                     gallery.innerHTML += `
                         <div class="card">
