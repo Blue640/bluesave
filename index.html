@@ -52,97 +52,92 @@
 </div>
 
 <script>
+const SCRIPT_URL = 'ССЫЛКА_ИЗ_APPS_SCRIPT';
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyVktG3-mSFwav63VY8FxuOXGthCx7eQtGrCrAtTflRn4mz57fECmfOtp6F09ry3mxWUbXhHAO6XFc/pub?output=csv';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzOAHDLOTQH9ZEMEcBoq8X2nvUi4kxTBTQUdd4Qm_vx5eFWDEX05Up51gG-WJU_mw8l/exec';
-
 const profiles = {
-    "Xaritob23": { role: "Проверенный", color: "#4a9eff" },
-    "Blue": { role: "Создатель", color: "#00ffcc" },
-    "BlueSave": { role: "Разработчик", color: "#ff4a4a" }
+"Xaritob23": { role: "Проверенный", color: "#4a9eff" },
+"Blue": { role: "Создатель", color: "#00ffcc" },
+"BlueSave": { role: "Разработчик", color: "#ff4a4a" }
 };
-
 async function downloadFile(url, filename, rowId) {
-    // Отправляем запрос на +1
-    fetch(`${SCRIPT_URL}?row=${rowId}`, { mode: 'no-cors' });
-
-    try {
-        const res = await fetch(url);
-        const blob = await res.blob();
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = filename;
-        a.click();
-    } catch (e) { window.open(url, '_blank'); }
+const beacon = new Image();
+beacon.src = SCRIPT_URL + "?row=" + rowId + "&t=" + Date.now();
+try {
+const res = await fetch(url);
+const blob = await res.blob();
+const a = document.createElement('a');
+a.href = URL.createObjectURL(blob);
+a.download = filename;
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+} catch (e) {
+window.open(url, '_blank');
 }
-
+}
 async function fetchData() {
-    const gallery = document.getElementById('gallery');
-    try {
-        const res = await fetch(CSV_URL);
-        const text = await res.text();
-        const rows = text.trim().split(/\r?\n/).slice(1);
-        
-        let data = rows.map((r, i) => {
-            const c = r.match(/(".*?"|[^",;]+)(?=\s*[,;]|\s*$)/g);
-            return {
-                id: i + 2,
-                title: c[0].replace(/"/g, ''),
-                author: c[1].replace(/"/g, ''),
-                img: c[2].replace(/"/g, ''),
-                link: c[3].replace(/"/g, ''),
-                downloads: parseInt(c[4]) || 0
-            };
-        });
-
-        // Сортировка по скачиваниям
-        data.sort((a, b) => b.downloads - a.downloads);
-
-        // 1. Находим разработчика
-        const devIdx = data.findIndex(x => x.author === 'BlueSave');
-        let dev = devIdx !== -1 ? data.splice(devIdx, 1)[0] : null;
-
-        // 2. Находим самую непопулярную работу (Wildcard)
-        let lucky = null;
-        if (data.length > 2) {
-            lucky = data.splice(data.length - 1, 1)[0];
-        }
-
-        // Собираем финальный список
-        let final = [];
-        if (dev) final.push(dev); // Разработчик всегда 1-й
-        if (lucky) final.push(lucky); // Рекомендация всегда 2-я
-        
-        // Добавляем остальных и вставляем "lucky" еще раз в середину
-        data.forEach((item, index) => {
-            final.push(item);
-            if (lucky && index === 4) final.push(lucky); // Дубликат рекомендации на 6-й позиции
-        });
-
-        const maxD = Math.max(...final.map(d => d.downloads));
-        gallery.innerHTML = '';
-
-        final.forEach(item => {
-            const p = profiles[item.author] || { role: "Юзер", color: "#707a8c" };
-            const isTop = item.downloads === maxD && maxD > 0;
-
-            gallery.innerHTML += `
-                <div class="card">
-                    ${isTop ? '<div class="top-badge">ТОП СКАЧИВАНИЙ</div>' : ''}
-                    <img src="${item.img}" class="card-img">
-                    <div class="profile-info">
-                        <div class="avatar-box" style="background:${p.color}"></div>
-                        <div style="font-size:0.75rem;color:${p.color}">@${item.author}</div>
-                        <div class="badge" style="border:1px solid ${p.color};color:${p.color}">${p.role}</div>
-                    </div>
-                    <h3 class="card-title">${item.title}</h3>
-                    <div class="stats">📥 СКАЧАНО: ${item.downloads}</div>
-                    <button class="btn-download" onclick="downloadFile('${item.link}', '${item.title}', ${item.id})">СКАЧАТЬ</button>
-                </div>`;
-        });
-    } catch (e) { gallery.innerHTML = 'ERROR'; }
+const gallery = document.getElementById('gallery');
+try {
+const res = await fetch(CSV_URL);
+const text = await res.text();
+const rows = text.trim().split(/\r?\n/).slice(1);
+let data = rows.map((r, i) => {
+const c = r.match(/(".*?"|[^",;]+)(?=\s*[,;]|\s*$)/g);
+return {
+id: i + 2,
+title: c[0].replace(/"/g, ''),
+author: c[1].replace(/"/g, ''),
+img: c[2].replace(/"/g, ''),
+link: c[3].replace(/"/g, ''),
+downloads: parseInt(c[4]) || 0
+};
+});
+data.sort((a, b) => b.downloads - a.downloads);
+const devIdx = data.findIndex(x => x.author === 'BlueSave');
+let dev = devIdx !== -1 ? data.splice(devIdx, 1)[0] : null;
+let lucky = null;
+if (data.length > 0) {
+lucky = data[data.length - 1];
 }
-
+let final = [];
+if (dev) final.push(dev);
+if (lucky) final.push(lucky);
+data.forEach((item, index) => {
+if (lucky && item.id === lucky.id) return;
+final.push(item);
+if (lucky && (index + 1) % 3 === 0) {
+final.push(lucky);
+}
+});
+const maxD = Math.max(...final.map(d => d.downloads));
+gallery.innerHTML = '';
+final.forEach(item => {
+const p = profiles[item.author] || { role: "Юзер", color: "#707a8c" };
+const isTop = item.downloads === maxD && maxD > 0;
+gallery.innerHTML += `
+<div class="card">
+${isTop ? '<div class="top-badge">ТОП СКАЧИВАНИЙ</div>' : ''}
+<img src="${item.img}" class="card-img" loading="lazy">
+<div class="profile-info">
+<div class="avatar-box" style="background:${p.color}"></div>
+<div style="font-size:0.75rem;color:${p.color}">@${item.author}</div>
+<div class="badge" style="border:1px solid ${p.color};color:${p.color}">${p.role}</div>
+</div>
+<h3 class="card-title">${item.title}</h3>
+<div class="stats"><span>📥 СКАЧАНО: ${item.downloads}</span></div>
+<button class="btn-download" onclick="downloadFile('${item.link}', '${item.title}', ${item.id})">СКАЧАТЬ</button>
+</div>`;
+});
+} catch (e) { gallery.innerHTML = 'DATABASE_ERROR'; }
+}
+document.getElementById('searchInput').addEventListener('input', function() {
+const q = this.value.toLowerCase();
+document.querySelectorAll('.card').forEach(c => {
+c.style.display = c.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
+});
+});
 fetchData();
+
 </script>
 </body>
 </html>
