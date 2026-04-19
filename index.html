@@ -16,6 +16,19 @@
 --top-color: #ffcc00;
 }
 * { box-sizing: border-box; }
+#tg-warning {
+    display: none;
+    background: #ff4a4a;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.8rem;
+    position: sticky;
+    top: 70px; /* Сразу под хедером */
+    z-index: 99;
+    border-radius: 4px;
+    margin: 10px;
+}
 body { background-color: var(--bg); color: var(--text); font-family: var(--font-mono); margin: 0; line-height: 1.5; }
 header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #0a0c0f; position: sticky; top: 0; z-index: 100; }
 .logo-block { display: flex; flex-direction: column; }
@@ -62,6 +75,10 @@ header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: fl
 <a href="https://forms.gle/tcu6xcjLdpWq5miBA" target="_blank" class="btn-upload">Загрузить</a>
 </header>
 <div class="container">
+<div id="tg-warning">
+    ⚠️ В браузере Telegram скачивание может не работать. <br>
+    Нажмите <b>⋮</b> или <b>⋯</b> и выберите <b>"Открыть в браузере"</b>.
+</div>
 <div class="controls-wrapper">
     <input type="text" id="searchInput" class="search-box" placeholder="Поиск по моделям и авторам">
     <div class="filter-bar">
@@ -76,6 +93,7 @@ header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: fl
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxsDfqYPMOoqgiO6YyIR4R5NguXwvAfiJP9v4Gc1OeccUtdOK4WaQiGoC-M5hqIeCg/exec';
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyVktG3-mSFwav63VY8FxuOXGthCx7eQtGrCrAtTflRn4mz57fECmfOtp6F09ry3mxWUbXhHAO6XFc/pub?output=csv';
 
+    
 const profiles = {
 "Xaritob23": { role: "Проверенный юзер", color: "#4a9eff" },
 "Blue": { role: "Создатель", color: "#00ffcc" },
@@ -84,6 +102,18 @@ const profiles = {
     
 let currentFilter = 'all';
 
+function checkTelegram() {
+    const ua = navigator.userAgent  navigator.vendor  window.opera;
+    const isTelegram = ua.indexOf('Telegram') > -1;
+    
+    if (isTelegram) {
+        document.getElementById('tg-warning').style.display = 'block';
+    }
+}
+
+// Запусти проверку сразу
+checkTelegram();
+    
 function filterCards(type, btn) {
     currentFilter = type;
     // Подсвечиваем нажатую кнопку
