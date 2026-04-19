@@ -104,12 +104,18 @@ let currentFilter = 'all';
 
 function checkTelegram() {
     const ua = navigator.userAgent || navigator.vendor || window.opera;
-// Проверяем Telegram по трем разным признакам
-    const isTelegram = (ua.indexOf('Telegram') > -1) || 
-                       (ua.indexOf('Messenger') > -1 && ua.indexOf('android') > -1) ||
-                       (window.Telegram && window.Telegram.WebApp);
+// 1. Проверка через системные объекты Telegram (самое надежное)
+    const isTgObject = !!window.TelegramWebviewProxy || 
+                       !!window.Telegram || 
+                       (window.external && 'notify' in window.external);
     
-    if (isTelegram) {
+    // 2. Расширенный поиск по User Agent (включая мобильные версии)
+    const isTgUA = /Telegram|t_mini_app|Messenger|Webview/i.test(ua);
+
+    // 3. Проверка на "скрытый" WebView Android
+    const isWebView = /; wv\)/.test(ua) || (ua.includes('Version/') && ua.includes('Chrome'));
+
+    if (isTgObject || isTgUA || isWebView) {
         const warning = document.getElementById('tg-warning');
         if (warning) {
             warning.style.display = 'block';
