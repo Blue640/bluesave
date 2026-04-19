@@ -18,17 +18,17 @@
 * { box-sizing: border-box; }
 #tg-warning {
     display: none;
-    background: #ff4a4a;
-    color: #fff;
-    text-align: center;
-    padding: 10px;
-    font-size: 0.8rem;
-    position: sticky;
-    top: 70px; /* Сразу под хедером */
-    z-index: 99;
-    border-radius: 4px;
-    margin: 10px;
+    background: #1c1f24; /* Чуть светлее фона, но в тон */
+    color: #b0b7c1;
+    text-align: left;
+    padding: 15px;
+    border-left: 3px solid #ff4a4a; /* Тонкая красная полоса слева для акцента */
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    border-radius: 2px;
 }
+#tg-warning b { color: #fff; }
+#tg-warning .accent-text { color: var(--accent); }
 body { background-color: var(--bg); color: var(--text); font-family: var(--font-mono); margin: 0; line-height: 1.5; }
 header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #0a0c0f; position: sticky; top: 0; z-index: 100; }
 .logo-block { display: flex; flex-direction: column; }
@@ -76,8 +76,8 @@ header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: fl
 </header>
 <div class="container">
 <div id="tg-warning">
-    ⚠️ В браузере Telegram скачивание может не работать. <br>
-    Нажмите <b>⋮</b> или <b>⋯</b> и выберите <b>"Открыть в браузере"</b>.
+    <b>БРАУЗЕР TELEGRAM:</b> Скачивание файлов недоступно.<br>
+    Нажмите <b>⋮</b> и выберите <span class="accent-text">"Открыть в браузере"</span>.
 </div>
 <div class="controls-wrapper">
     <input type="text" id="searchInput" class="search-box" placeholder="Поиск по моделям и авторам">
