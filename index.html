@@ -152,13 +152,18 @@ function applyFilters() {
 }
 // Функция скачивания (исправлена)
 async function downloadFile(url, filename, rowId) {
+    // 1. Отправляем сигнал на сервер для счетчика (исправлено)
     const isLogged = localStorage.getItem('voted_' + rowId);
     if (!isLogged) {
-        const beacon = new Image();
-        beacon.src = SCRIPT_URL + "?row=" + rowId + "&t=" + Date.now();
-        localStorage.setItem('voted_' + rowId, 'true');
+        fetch(SCRIPT_URL + "?row=" + rowId + "&t=" + Date.now(), { mode: 'no-cors' })
+            .then(() => {
+                localStorage.setItem('voted_' + rowId, 'true');
+                console.log('Счетчик засчитан для строки: ' + rowId);
+            })
+            .catch(err => console.error('Ошибка счетчика:', err));
     }
 
+    // 2. Дальше идет твой основной код скачивания...
     try {
         const response = await fetch(url);
         const blob = await response.blob();
