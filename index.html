@@ -103,7 +103,7 @@ const profiles = {
 let currentFilter = 'all';
 
 function checkTelegram() {
-    const ua = navigator.userAgent  navigator.vendor  window.opera;
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
     const isTelegram = ua.indexOf('Telegram') > -1;
     
     if (isTelegram) {
