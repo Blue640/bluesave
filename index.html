@@ -152,33 +152,23 @@ function applyFilters() {
 }
 // Функция скачивания (исправлена)
 async function downloadFile(url, filename, rowId) {
-    // 1. Отправляем сигнал на сервер для счетчика (исправлено)
-    const isLogged = localStorage.getItem('voted_' + rowId);
-    if (!isLogged) {
-        fetch(SCRIPT_URL + "?row=" + rowId + "&t=" + Date.now(), { mode: 'no-cors' })
-            .then(() => {
-                localStorage.setItem('voted_' + rowId, 'true');
-                console.log('Счетчик засчитан для строки: ' + rowId);
-            })
-            .catch(err => console.error('Ошибка счетчика:', err));
-    }
+    console.log("Попытка обновить счетчик для строки:", rowId);
+    
+    // Временно убрали проверку localStorage, чтобы пофиксить сам запрос
+    fetch(SCRIPT_URL + "?row=" + rowId + "&t=" + Date.now(), { 
+        mode: 'no-cors',
+        method: 'GET'
+    }).then(() => console.log("Запрос счетчика отправлен"))
+      .catch(err => console.error("Ошибка сети:", err));
 
-    // 2. Дальше идет твой основной код скачивания...
     try {
         const response = await fetch(url);
         const blob = await response.blob();
-        
-        // Создаем Blob с явным типом, чтобы не было .png в конце
         const imageBlob = new Blob([blob], { type: 'image/jpeg' });
         const blobUrl = window.URL.createObjectURL(imageBlob);
-        
         const a = document.createElement('a');
         a.href = blobUrl;
-        
-        // Очищаем имя от точек и ставим чистый .jpg
-        let cleanName = filename.split('.')[0]; 
-        a.download = cleanName + ".jpg"; 
-        
+        a.download = filename.split('.')[0] + ".jpg"; 
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
