@@ -104,10 +104,16 @@ let currentFilter = 'all';
 
 function checkTelegram() {
     const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const isTelegram = ua.indexOf('Telegram') > -1;
+// Проверяем Telegram по трем разным признакам
+    const isTelegram = (ua.indexOf('Telegram') > -1) || 
+                       (ua.indexOf('Messenger') > -1 && ua.indexOf('android') > -1) ||
+                       (window.Telegram && window.Telegram.WebApp);
     
     if (isTelegram) {
-        document.getElementById('tg-warning').style.display = 'block';
+        const warning = document.getElementById('tg-warning');
+        if (warning) {
+            warning.style.display = 'block';
+        }
     }
 }
 
