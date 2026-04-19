@@ -152,23 +152,30 @@ function applyFilters() {
 }
 // Функция скачивания (исправлена)
 async function downloadFile(url, filename, rowId) {
-    console.log("Попытка обновить счетчик для строки:", rowId);
+    const isLogged = localStorage.getItem('voted_' + rowId);
     
-    // Временно убрали проверку localStorage, чтобы пофиксить сам запрос
-    fetch(SCRIPT_URL + "?row=" + rowId + "&t=" + Date.now(), { 
-        mode: 'no-cors',
-        method: 'GET'
-    }).then(() => console.log("Запрос счетчика отправлен"))
-      .catch(err => console.error("Ошибка сети:", err));
+    if (!isLogged) {
+        // Отправляем запрос счетчика
+        fetch(SCRIPT_URL + "?row=" + rowId + "&t=" + Date.now(), { 
+            mode: 'no-cors',
+            method: 'GET'
+        }).then(() => {
+            localStorage.setItem('voted_' + rowId, 'true');
+            console.log("Счетчик обновлен для строки:", rowId);
+        });
+    }
 
     try {
         const response = await fetch(url);
         const blob = await response.blob();
         const imageBlob = new Blob([blob], { type: 'image/jpeg' });
         const blobUrl = window.URL.createObjectURL(imageBlob);
+        
         const a = document.createElement('a');
         a.href = blobUrl;
-        a.download = filename.split('.')[0] + ".jpg"; 
+        let cleanName = filename.split('.')[0]; 
+        a.download = cleanName + ".jpg"; 
+        
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
